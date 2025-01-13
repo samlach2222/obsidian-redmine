@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import RedmineIssuePluginSettings from '../settings'
-import { request } from 'https'
-import { join } from 'path'
+import {request} from 'https'
+import {join} from 'path'
 
 export interface RedmineIssue {
   id: string;
@@ -90,7 +90,7 @@ export default class RedmineClient {
           resolve(resData ? JSON.parse(resData) : '')
         })
       })
-      
+
       req.on('error', (error) => {
         reject(error)
       })
@@ -100,7 +100,7 @@ export default class RedmineClient {
       }
 
       req.end()
-    })    
+    })
   }
 
   async queueApi(method: string, path: string, data: any = {}): Promise<any> {
@@ -132,7 +132,7 @@ export default class RedmineClient {
         name: res.issue.project.name
       },
       subject: res.issue.subject,
-      status: res.issue.name,
+      status: res.issue.status.name,
       timeTracking: {
         doneRatio: res.issue.done_ratio || 0,
         spentHours: res.issue.spent_hours || 0,
@@ -164,7 +164,7 @@ export default class RedmineClient {
       projectId: projectId
     }))
   }
-  
+
   async saveIssueTimeEntry(issueId: string, hours: number, activityId: number, spentOn?: Date, comments?: string): Promise<void> {
     await this.callApi('POST', 'time_entries.json', {
       time_entry: {
@@ -184,7 +184,14 @@ export default class RedmineClient {
     const res = await this.callApi('GET', `time_entries.json?user_id=me&from=${dateFilter}&to=${dateFilter}`)
     res.time_entries = res.time_entries || []
 
-    return res.time_entries.map((entry: { id: number, issue: { id: number }, activity: { id: number }, hours: number, spent_on: string, comments: string }) => ({
+    return res.time_entries.map((entry: {
+      id: number,
+      issue: { id: number },
+      activity: { id: number },
+      hours: number,
+      spent_on: string,
+      comments: string
+    }) => ({
       id: entry.id,
       issueId: entry.issue.id,
       hours: entry.hours,

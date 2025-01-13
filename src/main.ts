@@ -1,20 +1,20 @@
 import * as os from 'os'
-import { Plugin, WorkspaceLeaf } from 'obsidian'
+import {Plugin, WorkspaceLeaf} from 'obsidian'
 import './lib/icons'
 import RedmineClient from './lib/redmine'
-import RedmineIssuePluginSettings, { DEFAULT_SETTINGS } from './settings'
+import RedmineIssuePluginSettings, {DEFAULT_SETTINGS} from './settings'
 import RedmineIssueSettingTab from './settings-tab'
 import IssueWidget from './issue-widget'
 import TrackingSaveModal from './tracking-save-modal'
-import { OnTimerSaveEvent } from './types'
-import TrackingView, { VIEW_TYPE_OUTPUT } from './tracking-view'
+import {OnTimerSaveEvent} from './types'
+import TrackingView, {VIEW_TYPE_OUTPUT} from './tracking-view'
 
 const EVENT_BUS_NAME = 'redmine-event-bus'
 
 declare global {
 	interface Window {
-		redmineEventBus: Comment; 
-		timeTrackerEventBus: Comment; 
+		redmineEventBus: Comment;
+		timeTrackerEventBus: Comment;
 	}
 }
 
@@ -29,7 +29,7 @@ export default class RedmineIssuePlugin extends Plugin {
 		this.addSettingTab(new RedmineIssueSettingTab(this.app, this))
 
 		this.initRedmineClient()
-		
+
 		this.registerMarkdownCodeBlockProcessor('redmine', this.issueBlockProcessor.bind(this))
 
 		this.registerView(
@@ -71,7 +71,7 @@ export default class RedmineIssuePlugin extends Plugin {
 	}
 
 	initLeaf(): void {
-		const { workspace } = this.app
+		const {workspace} = this.app
 
 		if (workspace.getLeavesOfType(VIEW_TYPE_OUTPUT).length > 0) {
 			return
@@ -98,7 +98,7 @@ export default class RedmineIssuePlugin extends Plugin {
 		for (const key of issues) {
 			const issueWidgetContainer = container.createDiv()
 			issueWidgetContainer.addClass('redmine-issue-grid-item')
-			
+
 			const issueWidget = issueWidgetContainer.createDiv()
 			issueWidget.addClass('redmine-issue')
 			issueWidget.addClass('timer-tracker-compatible')
